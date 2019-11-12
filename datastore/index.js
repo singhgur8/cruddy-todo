@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
+const Promise = require('bluebird') //added
 
 var items = {};
 
@@ -35,7 +36,7 @@ exports.readAll = (callback) => {
       var data = _.map(files, (text, id) => {
         text = text.slice(0, 5);
         // console.log(text);
-        return { id: '0000' + (id + 1), text: '0000' + (id + 1) };
+        return { id: text, text: text};
       });
       callback(err, data);
 
