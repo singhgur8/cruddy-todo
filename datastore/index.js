@@ -79,34 +79,26 @@ exports.readOne = (id, callback) => {
   // }
 };
 
-// exports.update = (id, text, callback) => {
-//   //if file path throws err, we throw err
-//   //else on sucess case, do the below thing
-//   var filepath = path.join(exports.dataDir, `${id}.txt`);
-
-//   fs.access(filepath, err => {
-//     if (err) {
-//       callback(new Error('error'));
-//     } else {
-//       fs.writeFile(filepath, text, function (err) {
-//         if (err) {
-//           callback(new Error('error'));
-//         } else {
-//           callback(null, { id, text });
-//         }
-
-//       });
-//     }
-//   });
-
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  //if file path throws err, we throw err
+  //else on sucess case, do the below thing
+  var filepath = path.join(exports.dataDir, `${id}.txt`);
+
+  fs.access(filepath, err => {
+    if (err) {
+      callback(new Error('error'));
+    } else {
+      fs.writeFile(filepath, text, function (err) {
+        if (err) {
+          callback(new Error('error'));
+        } else {
+          callback(null, { id, text });
+        }
+
+      });
+    }
+  });
+
 };
 
 

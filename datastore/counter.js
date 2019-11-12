@@ -39,30 +39,33 @@ const writeCounter = (count, callback) => {
 // Public API - Fix this function //////////////////////////////////////////////
 
 exports.getNextUniqueId = (callback) => {
-  // var cb = function (err, val) {
-  //   count = val;
-  // };
-  // callback(cb);
-  // // readCounter(cb);
-  if (callback === undefined) {
-    callback = () => {};
-  }
+
+  // if (callback === undefined) {
+  //   callback = () => {};
+  // }
 
   readCounter((err, id) => {
-    if (id === 0) {
-      counter++;
-      writeCounter(counter, callback);
-    } else if (id > 0) {
-      counter = id;
-      counter++;
-      writeCounter(counter, callback);
+    if (err) {
+      callback(new Error('error'))
+    } else {
+
+      if (id === 0) {
+        counter = 1;
+        writeCounter(counter, callback);
+      } else if (id > 0) {
+        counter = id;
+        counter++;
+        writeCounter(counter, callback);
+      }
     }
   });
 
   // counter = counter + 1;
 
   // callback();
-  return zeroPaddedNumber(counter);
+  // return zeroPaddedNumber(counter);
+
+
 };
 
 
