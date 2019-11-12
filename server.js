@@ -1,4 +1,5 @@
 
+// How the server is talking to hard drive data base
 // Todo Model //////////////////////////////////////////////////////////////////
 
 const Todo = require('./datastore');

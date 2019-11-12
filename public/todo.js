@@ -1,4 +1,4 @@
-
+//this talks to the server, so we can use this to communicate updates or recieve updates
 // Todo Model //////////////////////////////////////////////////////////////////
 
 window.Todo = {
