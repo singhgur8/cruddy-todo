@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
-const Promise = require('bluebird') //added
+const Promised = require('bluebird'); //added, needs to not be be Promise since that overlaps with the js function which is similar
 
 var items = {};
 
@@ -28,27 +28,41 @@ exports.create = (text, callback) => {
   });
 };
 
+//promisfy all of the functions here, will probably have to use promisyreadAll
+//since we dont know how many readfiles we wil need?
+//promise all takes in a bucnch of functions, if they all succed then it runs a then function
+
+//what promises do I have here?
+//first promise if to chek if the directory exists
+//if it does then the next promise is to check if the file exists and map through it
+
+//if successful then get then create an array obj and retur that at the end of readall
+
 exports.readAll = (callback) => {
-  fs.readdir(exports.dataDir, (err, files) => {
-    if (err) {
-      callback(new Error('error'));
-    } else {
-      var data = _.map(files, (text, id) => {
-        text = text.slice(0, 5);
-        // console.log(text);
-        return { id: text, text: text};
-      });
-      callback(err, data);
+  var promisesArr = [];
+  var readDir = Promised.promisify(fs.readdir);
+  // var readFile = Promised.promisify(fs.readFile);
+  var readOneAsync = Promised.promisify(exports.readOne);
 
-      // return files;
-
-    }
-  });
+  readDir(exports.dataDir)
+    .then(function (filenames) {
 
 
+      for (var i = 0; i < filenames.length; i++) {
+        filename = filenames[i].slice(0, 5);
+        promisesArr.push(readOneAsync(filename));
+
+      }
+
+      Promise.all(promisesArr)
+        .then((element) => { //element is what is returned after running the promises
+
+          callback(null, element);
+        });
+
+    });
 
 
-  // callback(null, data);
 };
 
 exports.readOne = (id, callback) => {
@@ -121,7 +135,7 @@ exports.delete = (id, callback) => {
     if (err) {
       callback(new Error('error'));
     } else {
-      console.log('deleted');
+      // console.log('deleted');
       callback(null);
     }
   });
